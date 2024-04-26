@@ -90,84 +90,36 @@ async def mermaid_to_file(engine, mermaid_code, output_file_without_suffix, widt
 
 MMC1 = """
 classDiagram
-    class pgSplash {
-        +redirect()
+    class Main {
+        -SearchEngine search_engine
+        +main() str
     }
-    class pgConnector {
-        +initialize()
+    class SearchEngine {
+        -Index index
+        -Ranking ranking
+        -Summary summary
+        +search(query: str) str
     }
-    class pgLogin {
-        +authenticate() bool
-        +redirect()
+    class Index {
+        -KnowledgeBase knowledge_base
+        +create_index(data: dict)
+        +query_index(query: str) list
     }
-    class pgMenu {
-        +navigateCustomers()
-        +navigateItems()
-        +navigateCart()
-        +navigateOrders()
-        +navigateReturns()
-        +navigateCollections()
-        +navigateInvoices()
-        +navigateReports()
+    class Ranking {
+        +rank_results(results: list) list
     }
-    class pgCustomers {
-        +viewCustomerDetails()
-        +addCustomer()
+    class Summary {
+        +summarize_results(results: list) str
     }
-    class pgItems {
-        +listItems()
-        +addItemToCart()
+    class KnowledgeBase {
+        +update(data: dict)
+        +fetch_data(query: str) dict
     }
-    class pgCart {
-        +viewCart()
-        +checkout() pgCheckOut
-    }
-    class pgOrders {
-        +listOrders()
-        +viewOrderDetails() pgOrderDetails
-    }
-    class pgOrderDetails {
-        +printOrderDetails()
-    }
-    class pgReturns {
-        +listReturns()
-        +processReturn() pgReturnDetails
-    }
-    class pgReturnDetails {
-        +printReturnDetails()
-    }
-    class pgCollection {
-        +viewCollections()
-    }
-    class pgInvoices {
-        +listInvoices()
-        +viewInvoiceDetails() pgInvoiceDetails
-    }
-    class pgInvoiceDetails {
-        +printInvoiceDetails()
-    }
-    class pgReports {
-        +generateReport()
-    }
-    class pgCheckOut {
-        +finalizePurchase()
-    }
-
-    pgSplash --> pgConnector : redirects
-    pgSplash --> pgLogin : redirects
-    pgLogin --> pgMenu : on_success
-    pgMenu --> pgCustomers
-    pgMenu --> pgItems
-    pgMenu --> pgCart
-    pgMenu --> pgOrders
-    pgMenu --> pgReturns
-    pgMenu --> pgCollection
-    pgMenu --> pgInvoices
-    pgMenu --> pgReports
-    pgCart --> pgCheckOut : on_checkout
-    pgOrders --> pgOrderDetails : view_details
-    pgReturns --> pgReturnDetails : process_return
-    pgInvoices --> pgInvoiceDetails : view_details
+    Main --> SearchEngine
+    SearchEngine --> Index
+    SearchEngine --> Ranking
+    SearchEngine --> Summary
+    Index --> KnowledgeBase
 """
 
 MMC2 = """

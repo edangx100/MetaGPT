@@ -56,6 +56,7 @@ class CostManager(BaseModel):
         self.total_cost += cost
         logger.info(
             f"Total running cost: ${self.total_cost:.3f} | Max budget: ${self.max_budget:.3f} | "
+            f"Total prompt_tokens: {self.total_prompt_tokens} | Total completion_tokens: {self.total_completion_tokens} | "
             f"Current cost: ${cost:.3f}, prompt_tokens: {prompt_tokens}, completion_tokens: {completion_tokens}"
         )
 

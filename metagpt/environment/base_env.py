@@ -165,7 +165,7 @@ class Environment(ExtEnv):
         """增加一批在当前环境的角色
         Add a batch of characters in the current environment
         """
-        for role in roles:
+        for role in roles: 
             self.roles[role.profile] = role
 
         for role in roles:  # setup system message with roles

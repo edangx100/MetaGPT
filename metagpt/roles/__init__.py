@@ -15,6 +15,10 @@ from metagpt.roles.qa_engineer import QaEngineer
 from metagpt.roles.searcher import Searcher
 from metagpt.roles.sales import Sales
 
+from metagpt.roles.business_analyst import BA
+from metagpt.roles.human1 import Human1
+from metagpt.roles.product_manager1 import ProductManager1
+
 
 __all__ = [
     "Role",
@@ -25,4 +29,7 @@ __all__ = [
     "QaEngineer",
     "Searcher",
     "Sales",
+    "BA",
+    "Human1",
+    "ProductManager1",
 ]
