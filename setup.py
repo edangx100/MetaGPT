@@ -40,6 +40,9 @@ extras_require = {
         "llama-index-vector-stores-faiss==0.1.1",
         "llama-index-vector-stores-elasticsearch==0.1.6",
         "llama-index-vector-stores-chroma==0.1.6",
+        "llama-index-postprocessor-cohere-rerank==0.1.4",
+        "llama-index-postprocessor-colbert-rerank==0.1.1",
+        "llama-index-postprocessor-flag-embedding-reranker==0.1.2",
         "docx2txt==0.8",
     ],
     "android_assistant": ["pyshine==0.0.9", "opencv-python==4.6.0.66"],
@@ -71,7 +74,7 @@ extras_require["dev"] = (["pylint~=3.0.3", "black~=23.3.0", "isort~=5.12.0", "pr
 
 setup(
     name="metagpt",
-    version="0.8.0",
+    version="0.8.1",
     description="The Multi-Agent Framework",
     long_description=long_description,
     long_description_content_type="text/markdown",
