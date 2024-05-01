@@ -20,18 +20,25 @@ from metagpt.actions.search_and_summarize import SearchAndSummarize
 from metagpt.actions.write_code import WriteCode
 from metagpt.actions.write_code_review import WriteCodeReview
 from metagpt.actions.write_prd import WritePRD
+from metagpt.actions.write_prd1 import WritePRD1
+
 from metagpt.actions.write_prd_review import WritePRDReview
 from metagpt.actions.write_test import WriteTest
 from metagpt.actions.di.execute_nb_code import ExecuteNbCode
 from metagpt.actions.di.write_analysis_code import WriteAnalysisCode
 from metagpt.actions.di.write_plan import WritePlan
 
+from metagpt.actions.analyse_business import AnalyseBusinessReq      #!
+from metagpt.actions.review_by_human1 import Human1ReviewReq         #!
+from metagpt.actions.review_by_human2 import Human2ReviewReq         #!
 
 class ActionType(Enum):
     """All types of Actions, used for indexing."""
 
     ADD_REQUIREMENT = UserRequirement
     WRITE_PRD = WritePRD
+    WRITE_PRD1 = WritePRD1  #!
+
     WRITE_PRD_REVIEW = WritePRDReview
     WRITE_DESIGN = WriteDesign
     DESIGN_REVIEW = DesignReview
@@ -49,9 +56,17 @@ class ActionType(Enum):
     WRITE_ANALYSIS_CODE = WriteAnalysisCode
     WRITE_PLAN = WritePlan
 
+    ANALYSE_BUSINESS = AnalyseBusinessReq            #!
+    HUMAN1_REVIEW_REQUIREMENT = Human1ReviewReq      #!
+    HUMAN12_REVIEW_REQUIREMENT = Human2ReviewReq     #!
 
 __all__ = [
     "ActionType",
     "Action",
     "ActionOutput",
+
+    "WritePlan1",                 #!
+    "AnalyseBusinessReq",         #!
+    "Human1ReviewReq",            #!
+    "Human2ReviewReq",            #!
 ]

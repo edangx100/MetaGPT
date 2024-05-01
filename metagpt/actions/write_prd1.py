@@ -58,7 +58,7 @@ NEW_REQ_TEMPLATE = """
 """
 
 
-class WritePRD(Action):
+class WritePRD1(Action):
     """WritePRD deal with the following situations:
     1. Bugfix: If the requirement is a bugfix, the bugfix document will be generated.
     2. New requirement: If the requirement is a new requirement, the PRD document will be generated.
@@ -70,6 +70,7 @@ class WritePRD(Action):
         req: Document = await self.repo.requirement
         print(f"WritePRD self.repo.requirement: {req.content}")
         print(f"with_messages: {with_messages}")
+
         docs: list[Document] = await self.repo.docs.prd.get_all()
         if not req:
             raise FileNotFoundError("No requirement document found.")
@@ -85,8 +86,10 @@ class WritePRD(Action):
             logger.info(f"Requirement update detected: {req.content}")
             return await self._handle_requirement_update(req, related_docs)
         else:
-            logger.info(f"New requirement detected: {req.content}")
-            return await self._handle_new_requirement(req)
+            # logger.info(f"New requirement detected: {req.content}")
+            logger.info(f"New requirement detected: {with_messages[1].content}")
+            # return await self._handle_new_requirement(req)
+            return await self._handle_new_requirement(with_messages[1].content)
 
     async def _handle_bugfix(self, req: Document) -> Message:
         # ... bugfix logic ...

@@ -34,6 +34,7 @@ class WriteTasks(Action):
     i_context: Optional[str] = None
 
     async def run(self, with_messages):
+        logger.info(f"WriteTasks {with_messages=}")                             #! 'with_messages' not used here
         changed_system_designs = self.repo.docs.system_design.changed_files
         changed_tasks = self.repo.docs.task.changed_files
         change_files = Documents()

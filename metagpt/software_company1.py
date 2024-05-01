@@ -10,7 +10,7 @@ from metagpt.const import CONFIG_ROOT
 from metagpt.utils.project_repo import ProjectRepo
 
 ###
-from metagpt.roles import Role, BA, Human1, ProductManager1
+from metagpt.roles import Role, BA, Human1, ProductManager1, Architect1, ProjectManager1, Human2, Engineer1
 ###
 
 app = typer.Typer(add_completion=False, pretty_exceptions_show_locals=False)
@@ -19,7 +19,7 @@ app = typer.Typer(add_completion=False, pretty_exceptions_show_locals=False)
 def generate_repo(
     idea,
     investment=3.0,
-    n_round=5,
+    n_round=10,             #! previous 5
     code_review=True,
     run_tests=False,
     implement=True,
@@ -53,13 +53,17 @@ def generate_repo(
                 Human1(is_human=True),
                 ProductManager1(),
                 # ProductManager(),
-                Architect(),
-                ProjectManager(),
+                # Architect(),
+                Architect1(),
+                # ProjectManager(),
+                ProjectManager1(),
+                Human2(is_human=True),
             ]
         )
 
         if implement or code_review:
-            company.hire([Engineer(n_borg=5, use_code_review=code_review)])
+            # company.hire([Engineer(n_borg=5, use_code_review=code_review)])
+            company.hire([Engineer1(n_borg=5, use_code_review=code_review)])       #!
 
         if run_tests:
             company.hire([QaEngineer()])
@@ -82,7 +86,7 @@ def generate_repo(
 def startup(
     idea: str = typer.Argument(None, help="Your innovative idea, such as 'Create a 2048 game.'"),
     investment: float = typer.Option(default=3.0, help="Dollar amount to invest in the AI company."),
-    n_round: int = typer.Option(default=5, help="Number of rounds for the simulation."),
+    n_round: int = typer.Option(default=15, help="Number of rounds for the simulation."),
     code_review: bool = typer.Option(default=True, help="Whether to use code review."),
     run_tests: bool = typer.Option(default=False, help="Whether to enable QA for adding & running tests."),
     implement: bool = typer.Option(default=True, help="Enable or disable code implementation."),

@@ -1,18 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-@Time    : 2023/5/11 14:43
-@Author  : alexanderwu
-@File    : product_manager.py
-@Modified By: mashenquan, 2023/11/27. Add `PrepareDocuments` action according to Section 2.2.3.5.1 of RFC 135.
+@Time    : 2024/4/29 14:43
+@Author  : ed
+@File    : product_manager1.py
+@Modified By: 
 """
 
-from metagpt.actions import UserRequirement, WritePRD
+from metagpt.actions import UserRequirement, WritePRD1
 from metagpt.actions.prepare_documents import PrepareDocuments
 from metagpt.roles.role import Role
 from metagpt.utils.common import any_to_name
 
-from metagpt.roles.human1 import Human1ReviewReq
+# from metagpt.roles.human1 import Human1ReviewReq
+from metagpt.actions.review_by_human1 import Human1ReviewReq
 
 
 class ProductManager1(Role):
@@ -35,7 +36,7 @@ class ProductManager1(Role):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
 
-        self.set_actions([PrepareDocuments, WritePRD])
+        self.set_actions([PrepareDocuments, WritePRD1])
         self._watch([Human1ReviewReq, PrepareDocuments])
         self.todo_action = any_to_name(PrepareDocuments)
 
@@ -46,8 +47,15 @@ class ProductManager1(Role):
         else:
             self._set_state(0)
             self.config.git_reinit = False
-            self.todo_action = any_to_name(WritePRD)
+            self.todo_action = any_to_name(WritePRD1)
         return bool(self.rc.todo)
 
     async def _observe(self, ignore_memory=False) -> int:
         return await super()._observe(ignore_memory=True)
+
+
+    # async def _act(self) -> Message:
+    #     subtask = await self.rc.todo.run(self.rc.history)
+    #     msg = Message(content=subtask, cause_by=WritePRD1)
+    #     logger.info(f"Alice publish_message: {msg}..")
+    #     return msg

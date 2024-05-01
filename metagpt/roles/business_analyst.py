@@ -11,72 +11,14 @@ from metagpt.actions import UserRequirement, WritePRD, Action
 from metagpt.actions.prepare_documents import PrepareDocuments
 from metagpt.roles.role import Role
 from metagpt.utils.common import any_to_name
+
 from metagpt.schema import Message
 from metagpt.const import MESSAGE_ROUTE_TO_NONE
+from metagpt.logs import logger
 
-################################################
+from metagpt.actions.review_by_human1 import Human1ReviewReq
+from metagpt.actions.analyse_business import AnalyseBusinessReq
 
-# class AnalyseBusinessReq(Action):
-#     PROMPT_TEMPLATE: str = """
-#     You are a Business Analyst now. 
-#     Break the following requirements in component tasks {instruction}.
-#     Respond in bullet points
-#     """
-#     name: str = "AnalyseBusinessReq"
-
-#     async def run(self, instruction: str):
-#         prompt = self.PROMPT_TEMPLATE.format(instruction=instruction)
-#         rsp = await self._aask(prompt)
-#         return rsp
-
-class AnalyseBusinessReq(Action):
-
-    PROMPT_TEMPLATE: str = """
-    You are a Business Analyst now. 
-    I need a business requirement document for my App designed for following description between triple backticks:
-    ```{instruction}```
-    This app has Dynamics 365 Business Central (BC365) as backend.
-
-    Suggest the business requirement for the app. 
-    Arrange it such that it is easy for me to modify the business logic for any part if it is wrong. 
-    Be as detailed as possible.
-
-    Response in JSON format like following:
-    {json_eg}
-    """
-    name: str = "AnalyseBusinessReq"
-
-    async def run(self, instruction: str):
-        jsonstring = """{
-            "ProjectDescription": "Developing a comprehensive field sales application to streamline sales processes and enhance efficiency for field sales representatives.",
-            "BusinessRequirements": {
-                "BR1": "The application should allow field sales representatives to view and manage their assigned leads, contacts, and accounts.",
-                "BR2": "Integration with the company's CRM system to synchronize data in real-time and ensure consistency across platforms."
-            },
-            "UserStories": {
-                "US1": "As a field sales representative, I want to be able to easily access and update lead information while on the go.",
-                "US2": "As a sales manager, I want to view real-time updates on my team's activities and performance."
-            },
-            "UserJourney": {
-                "UJ1": "Field sales representative logs into the application using their credentials and accesses their dashboard.",
-                "UJ2": "The representative views their assigned leads and selects a lead to update its status and details."
-            }
-        }"""
-        clean_jsonstring = jsonstring.replace('\\n', ' ')
-        prompt = self.PROMPT_TEMPLATE.format(instruction=instruction, json_eg=clean_jsonstring)
-        rsp = await self._aask(prompt)
-        return rsp
-
-
-# class BA(Role):
-#     name: str = "Bala_BA"
-#     profile: str = "Business Analyst"
-
-#     def __init__(self, **kwargs):
-#         super().__init__(**kwargs)
-#         self._watch([UserRequirement, HumanReviewReq])       # UserRequirement is action?, remove this statement -> same result? yes
-#         # self._watch([UserRequirement,]) 
-#         self.set_actions([AnalyseBusinessReq])
 
 class BA(Role):
     """
@@ -98,18 +40,22 @@ class BA(Role):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
 
-        # self.set_actions([AnalyseBusinessReq, PrepareDocuments, WritePRD])
         self.set_actions([AnalyseBusinessReq])
         # self._watch([UserRequirement, PrepareDocuments, HumanReviewReq])       # UserRequirement is action?, remove this statement -> same result? yes
-        self._watch([UserRequirement]) 
+        self._watch([UserRequirement, Human1ReviewReq]) 
+        # self._watch([UserRequirement]) 
         
-        # self.todo_action = any_to_name(PrepareDocuments)    # ?
 
     async def _act(self) -> Message:
+        print("XXXX")
+        print(self.rc.history)
         subtask = await self.rc.todo.run(self.rc.history)
-        self.rc.env.publish_message(Message(content=subtask, cause_by=AnalyseBusinessReq)) # Human Agent subscribes to this type of message
-        return Message(content="dummy message", send_to=MESSAGE_ROUTE_TO_NONE) # Since the messages have been sent, returning an empty message is sufficient.
-
+        # msg = Message(content=subtask, cause_by=AnalyseBusinessReq, send_to="<all>")
+        msg = Message(content=subtask, cause_by=AnalyseBusinessReq)
+        # self.rc.env.publish_message(msg)    # Human Agent subscribes to this type of message
+        logger.info(f"Bala_BA publish_message: {msg}..")
+        # return Message(content="dummy message", send_to=MESSAGE_ROUTE_TO_NONE, cause_by=AnalyseBusinessReq) # Since the messages have been sent, returning an empty message is sufficient.
+        return msg
 
     # async def _think(self) -> bool:
     #     """Decide what to do"""
